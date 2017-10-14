@@ -1,4 +1,3 @@
-layui/
 *.iml
 .idea/
 .ipr
@@ -21,4 +20,10 @@ run.bat
 dir.txt
 /**/layim/
 /**/layim.js
+/**/layim-mobile.js
 /**/layim.html
+/**/layim.m.html
+release/
+build/
+
+coverage/

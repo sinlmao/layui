@@ -2,7 +2,7 @@
 
  @Name：layui.flow 流加载
  @Author：贤心
- @License：LGPL
+ @License：MIT
     
  */
  
@@ -10,20 +10,20 @@
 layui.define('jquery', function(exports){
   "use strict";
   
-  var $ = layui.jquery, Flow = function(options){}
+  var $ = layui.$, Flow = function(options){}
   ,ELEM_MORE = 'layui-flow-more'
   ,ELEM_LOAD = '<i class="layui-anim layui-anim-rotate layui-anim-loop layui-icon ">&#xe63e;</i>';
 
   //主方法
   Flow.prototype.load = function(options){
-    var that = this, page = 1, lock, isOver, lazyimg, timer;
+    var that = this, page = 0, lock, isOver, lazyimg, timer;
     options = options || {};
     
     var elem = $(options.elem); if(!elem[0]) return;
     var scrollElem = $(options.scrollElem || document); //滚动条所在元素
     var mb = options.mb || 50; //与底部的临界距离
     var isAuto = 'isAuto' in options ? options.isAuto : true; //是否自动滚动加载
-    var isShowEnd = 'isShowEnd' in options ? options.isShowEnd : true; //是否显示加载更多
+    var end = options.end || '没有更多了'; //“末页”显示文案
     
     //滚动条所在元素是否为document
     var notDocment = options.scrollElem && options.scrollElem !== document;
@@ -41,7 +41,7 @@ layui.define('jquery', function(exports){
       html = $(html);
       more.before(html);
       over = over == 0 ? true : null;
-      over ? more.html(isShowEnd ? '没有更多了' : '') : more.find('a').html(ELEM_TEXT);
+      over ? more.html(end) : more.find('a').html(ELEM_TEXT);
       isOver = over;
       lock = null;
       lazyimg && lazyimg();
@@ -54,6 +54,8 @@ layui.define('jquery', function(exports){
       typeof options.done === 'function' && options.done(++page, next);
     };
     
+    done();
+    
     //不自动滚动加载
     more.find('a').on('click', function(){
       var othis = $(this);
@@ -65,7 +67,7 @@ layui.define('jquery', function(exports){
     if(options.isLazyimg){
       var lazyimg = that.lazyimg({
         elem: options.elem + ' img'
-        ,scrollElem: scrollElem
+        ,scrollElem: options.scrollElem
       });
     }
     
@@ -162,7 +164,7 @@ layui.define('jquery', function(exports){
         if(timer) clearTimeout(timer)
         timer = setTimeout(function(){
           render(null, othis);
-        }, 100);
+        }, 50);
       }); 
       haveScroll = true;
     }
